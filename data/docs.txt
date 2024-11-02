@@ -1,0 +1,298 @@
+Danh sách các bảng(kèm thứ tự tạo):
+CHI_NHANH: ID_CHI_NHANH(PK), DIA_CHI
+CHU_CHI_NHANH: CCCD(PK), TEN, SDT, ID_CHI_NHANH(FK), DIA_CHI
+NHA_CUNG_CAP: ID_NHA_CUNG_CAP(PK), TEN_NHA_CUNG_CAP, DIA_CHI, SDT
+PHIEU_DAT_HANG: ID_PHIEU_DAT_HANG(PK), CCCD(FK), ID_NHA_CUNG_CAP(FK), NGAY_DAT, SO_LUONG
+CONG_VIEC: ID_CONG_VIEC(PK), TEN_CONG_VIEC
+LUONG: ID_CONG_VIEC(PK), LUONG_CUNG, THUONG
+NHAN_VIEN: ID_NHAN_VIEN(PK), TEN, DIA_CHI, ID_CONG_VIEC(FK), ID_CHI_NHANH(FK)
+SAN_PHAM: ID_SAN_PHAM(PK), TEN, GIA_BAN, SO_LUONG, ID_NHA_CUNG_CAP(FK), ID_NHAN_VIEN(FK)
+KHACH_HANG: ID_KHACH_HANG(PK), TEN, GIOI_TINH
+KHACH_HANG_SDT: ID_KHACH_HANG(FK), SDT 
+HOA_DON: ID_HOA_DON(PK), ID_KHACH_HANG(FK), ID_NHAN_VIEN(FK), NGAY_GIAO_DICH, TONG_TIEN
+BAO_GOM: (ID_HOA_DON, ID_SAN_PHAM)(PK, FK), SAN_PHAM
+KHACH_HANG_THUONG: ID_KHACH_HANG_THUONG(PK), VOUCHER
+KHACH_HANG_THAN_THIET: ID_KHACH_HANG_THAN_THIET(PK), THE_THANH_VIEN (LAU NAM)
+NHAN_VIEN_SDT: ID_NHAN_VIEN_SDT(FK), SDT
+
+#################################################################################################
++ Bảng Chi_Nhanh:
+Là bảng cơ sở lưu thông tin các chi nhánh
+Gồm 2 trường:
+    IDchinhanh: Mã định danh chi nhánh (khóa chính)
+    Diachi: Địa chỉ của chi nhánh
+Quan hệ: Là bảng cha của Chu_Chi_Nhanh và NHAN_VIEN (1:N)
+
++ Bảng Chu_Chi_Nhanh:
+Lưu thông tin của chủ chi nhánh
+Các trường:
+    CCCD: Số căn cước công dân (khóa chính)
+    Ten: Tên chủ chi nhánh
+    DiaChi: Địa chỉ của chủ
+    SDT: Số điện thoại
+    IDchinhanh: Khóa ngoại liên kết với Chi_Nhanh
+Quan hệ:
+    Là bảng con của Chi_Nhanh (N:1)
+    Là bảng cha của PHIEU_DAT (1:N)
+
+
++ Bảng DonViCungCap:
+Lưu thông tin đơn vị cung cấp hàng
+Các trường:
+    IDdonvicungcap: Mã đơn vị (khóa chính)
+    TenDVCC: Tên đơn vị
+    DiaChi: Địa chỉ
+    SDT: Số điện thoại
+Quan hệ:
+    Là bảng cha của PHIEU_DAT (1:N)
+    Là bảng cha của SAN_PHAM (1:N)
+
++ Bảng PHIEU_DAT:
+Lưu thông tin đơn đặt hàng
+Các trường:
+    IDdathang: Mã đơn (khóa chính)
+    CCCD: Khóa ngoại liên kết chủ chi nhánh đặt
+    IDdonvicungcap: Khóa ngoại liên kết nhà cung cấp
+    Thoigiandat: Thời gian đặt hàng
+    Soluongdat: Số lượng đặt
+Quan hệ:
+    Là bảng con của Chu_Chi_Nhanh (N:1)
+    Là bảng con của DonViCungCap (N:1)
+
++Bảng CONG_VIEC:
+Lưu danh sách các công việc
+Các trường:
+    IDcongviec: Mã công việc (khóa chính)
+    Tencongviec: Tên công việc
+Quan hệ:
+    Là bảng cha của LUONG (1:1)
+    Là bảng cha của NHAN_VIEN (1:N)
+
++ Bảng LUONG:
+Lưu thông tin lương theo công việc
+Các trường:
+    IDcongviec: Khóa ngoại liên kết công việc (unique)
+    Luongcung: Lương cứng
+    Luongthuong: Lương thưởng
+Quan hệ: Là bảng con của CONG_VIEC (1:1)
+
++ Bảng NHAN_VIEN:
+Lưu thông tin nhân viên
+Các trường:
+    IDnhanvien: Mã nhân viên (khóa chính)
+    TenNV: Tên nhân viên
+    DiachiNV: Địa chỉ
+    IDcongviec: Khóa ngoại liên kết công việc
+    IDchinhanh: Khóa ngoại liên kết chi nhánh
+Quan hệ:
+    Là bảng con của CONG_VIEC (N:1)
+    Là bảng con của Chi_Nhanh (N:1)
+    Là bảng cha của SAN_PHAM (1:N)
+    Là bảng cha của HOA_DON (1:N)
+
++ Bảng SAN_PHAM:
+Lưu thông tin sản phẩm
+Các trường:
+    IDsanpham: Mã sản phẩm (khóa chính)
+    Tensanpham: Tên sản phẩm
+    Giaban: Giá bán
+    Soluong: Số lượng
+    IDdonvicungcap: Khóa ngoại liên kết nhà cung cấp
+    IDnhanvien: Khóa ngoại liên kết nhân viên
+Quan hệ:
+    Là bảng con của DonViCungCap (N:1)
+    Là bảng con của NHAN_VIEN (N:1)
+    Là bảng cha của Bao_gom (1:N)
+
++ Bảng KHACH_HANG:
+Lưu thông tin khách hàng
+Các trường:
+    IDkhachhang: Mã khách hàng (khóa chính)
+    TenKH: Tên khách hàng
+    Gioitinh: Giới tính (Nam/Nu)
+Quan hệ:
+    Là bảng cha của KHACH_HANG_SDT (1:N)
+    Là bảng cha của HOA_DON (1:N)
+    Là bảng cha của KHACH_THUONG (1:1)
+    Là bảng cha của KHACH_LAU_NAM (1:1)
+
++ Bảng KHACH_HANG_SDT:
+Lưu số điện thoại của khách hàng
+Các trường:
+    IDkhachhang: Khóa ngoại liên kết khách hàng
+    SDT: Số điện thoại
+Quan hệ: Là bảng con của KHACH_HANG (N:1)
+
++ Bảng HOA_DON:
+Lưu thông tin hóa đơn
+Các trường:
+    IDhoadon: Mã hóa đơn (khóa chính)
+    IDkhachhang: Khóa ngoại liên kết khách hàng
+    IDnhanvien: Khóa ngoại liên kết nhân viên
+    NgayGD: Ngày giao dịch
+    Tongtien: Tổng tiền
+Quan hệ:
+    Là bảng con của KHACH_HANG (N:1)
+    Là bảng con của NHAN_VIEN (N:1)
+    Là bảng cha của Bao_gom (1:N)
+
++ Bảng Bao_gom:
+Lưu chi tiết sản phẩm trong hóa đơn
+Các trường:
+    IDhoadon: Khóa ngoại liên kết hóa đơn
+    IDsanpham: Khóa ngoại liên kết sản phẩm
+    SoLuong: Số lượng mua
+Khóa chính: (IDhoadon, IDsanpham)
+Quan hệ:
+    Là bảng con của HOA_DON (N:1)
+    Là bảng con của SAN_PHAM (N:1)
+
+Bảng KHACH_THUONG:
+Lưu thông tin khách hàng thường
+Các trường:
+    IDKH_thuong: Khóa ngoại liên kết khách hàng (khóa chính)
+    Voucher: Mã voucher (unique)
+Quan hệ: Là bảng con của KHACH_HANG (1:1)
+
+
++ Bảng KHACH_LAU_NAM:
+Lưu thông tin khách hàng VIP
+Các trường:
+    IDKH_vip: Khóa ngoại liên kết khách hàng (khóa chính)
+    Thethanhvien: Mã thẻ thành viên (unique)
+Quan hệ: Là bảng con của KHACH_HANG (1:1)
+
+###################################################################################
+-- Tạo bảng Chi nhánh
+CREATE TABLE Chi_Nhanh(
+    IDchinhanh VARCHAR(10) PRIMARY KEY NOT NULL,
+    Diachi VARCHAR(20)
+);
+
+-- Tạo bảng Chủ chi nhánh
+CREATE TABLE Chu_Chi_Nhanh(
+    CCCD VARCHAR(10) PRIMARY KEY NOT NULL,
+    Ten VARCHAR(50),
+    DiaChi VARCHAR(30),
+    SDT VARCHAR(10) NOT NULL,
+    IDchinhanh VARCHAR(10),
+    FOREIGN KEY (IDchinhanh) REFERENCES Chi_Nhanh(IDchinhanh) 
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Tạo bảng đơn vị cung cấp
+CREATE TABLE DonViCungCap(
+    IDdonvicungcap VARCHAR(10) PRIMARY KEY NOT NULL,
+    TenDVCC VARCHAR(30),
+    DiaChi VARCHAR(30),
+    SDT VARCHAR(10) NOT NULL
+);
+
+-- Tạo bảng Phiếu đặt hàng
+CREATE TABLE PHIEU_DAT(
+    IDdathang VARCHAR(20) PRIMARY KEY NOT NULL,
+    CCCD VARCHAR(10) NOT NULL,
+    IDdonvicungcap VARCHAR(10) NOT NULL,
+    Thoigiandat DATE NOT NULL,
+    Soluongdat INT NOT NULL,
+    FOREIGN KEY (CCCD) REFERENCES Chu_Chi_Nhanh(CCCD) 
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (IDdonvicungcap) REFERENCES DonViCungCap(IDdonvicungcap) 
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Tạo bảng công việc
+CREATE TABLE CONG_VIEC(
+    IDcongviec VARCHAR(10) PRIMARY KEY NOT NULL,
+    Tencongviec VARCHAR(20) NOT NULL
+);
+
+-- Tạo bảng lương
+CREATE TABLE LUONG(
+    IDcongviec VARCHAR(10) UNIQUE NOT NULL,
+    Luongcung INT NOT NULL,
+    Luongthuong INT NOT NULL,
+    FOREIGN KEY (IDcongviec) REFERENCES CONG_VIEC(IDcongviec) 
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Tạo bảng Nhân viên
+CREATE TABLE NHAN_VIEN(
+    IDnhanvien VARCHAR(10) PRIMARY KEY NOT NULL,
+    TenNV VARCHAR(50) NOT NULL,
+    DiachiNV VARCHAR(100) NOT NULL,
+    IDcongviec VARCHAR(10) NOT NULL,
+    IDchinhanh VARCHAR(10) NOT NULL,
+    FOREIGN KEY (IDcongviec) REFERENCES CONG_VIEC(IDcongviec) 
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (IDchinhanh) REFERENCES Chi_Nhanh(IDchinhanh) 
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Tạo bảng sản phẩm
+CREATE TABLE SAN_PHAM(
+    IDsanpham VARCHAR(10) PRIMARY KEY NOT NULL,
+    Tensanpham VARCHAR(30) NOT NULL,
+    Giaban INT NOT NULL,
+    Soluong INT NOT NULL,
+    IDdonvicungcap VARCHAR(10) NOT NULL,
+    IDnhanvien VARCHAR(10) NOT NULL,
+    FOREIGN KEY (IDdonvicungcap) REFERENCES DonViCungCap(IDdonvicungcap) 
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (IDnhanvien) REFERENCES NHAN_VIEN(IDnhanvien) 
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Tạo bảng khách hàng
+CREATE TABLE KHACH_HANG(
+    IDkhachhang VARCHAR(20) PRIMARY KEY NOT NULL,
+    TenKH VARCHAR(50) NOT NULL,
+    Gioitinh VARCHAR(5) CHECK (Gioitinh IN ('Nam', 'Nu'))
+);
+
+-- Tạo bảng số điện thoại khách hàng
+CREATE TABLE KHACH_HANG_SDT(
+    IDkhachhang VARCHAR(20) NOT NULL,
+    SDT VARCHAR(10) NOT NULL,
+    FOREIGN KEY (IDkhachhang) REFERENCES KHACH_HANG(IDkhachhang) 
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Tạo bảng hóa đơn
+CREATE TABLE HOA_DON(
+    IDhoadon VARCHAR(20) PRIMARY KEY NOT NULL,
+    IDkhachhang VARCHAR(20) NOT NULL,
+    IDnhanvien VARCHAR(10) NOT NULL,
+    NgayGD DATETIME NOT NULL,
+    Tongtien INT NOT NULL,
+    FOREIGN KEY (IDkhachhang) REFERENCES KHACH_HANG(IDkhachhang) 
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (IDnhanvien) REFERENCES NHAN_VIEN(IDnhanvien) 
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Tạo bảng Bao gồm (chi tiết hóa đơn)
+CREATE TABLE Bao_gom(
+    IDhoadon VARCHAR(20) NOT NULL,
+    IDsanpham VARCHAR(10) NOT NULL,
+    SoLuong INT NOT NULL,
+    PRIMARY KEY (IDhoadon, IDsanpham),
+    FOREIGN KEY (IDhoadon) REFERENCES HOA_DON(IDhoadon),
+    FOREIGN KEY (IDsanpham) REFERENCES SAN_PHAM(IDsanpham)
+);
+
+-- Tạo bảng khách hàng thường
+CREATE TABLE KHACH_THUONG(
+    IDKH_thuong VARCHAR(20) PRIMARY KEY NOT NULL,
+    Voucher VARCHAR(20) NOT NULL UNIQUE,
+    FOREIGN KEY (IDKH_thuong) REFERENCES KHACH_HANG(IDkhachhang) 
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Tạo bảng khách hàng lâu năm
+CREATE TABLE KHACH_LAU_NAM(
+    IDKH_vip VARCHAR(20) PRIMARY KEY NOT NULL,
+    Thethanhvien VARCHAR(20) NOT NULL UNIQUE,
+    FOREIGN KEY (IDKH_vip) REFERENCES KHACH_HANG(IDkhachhang) 
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
